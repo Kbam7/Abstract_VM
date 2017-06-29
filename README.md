@@ -1,5 +1,5 @@
 # Abstract_VM
-AbstractVM is a machine that uses a stack to compute simple arithmetic expressions. These arithmetic expressions are provided to the machine as basic assembly programs.
+AbstractVM is a machine that uses a stack to compute simple arithmetic expressions. These arithmetic expressions are provided to the machine as basic Abstract_VM assembly programs.
 
 ### Example:
 `example.avm`
