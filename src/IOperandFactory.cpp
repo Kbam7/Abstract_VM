@@ -6,20 +6,11 @@
 /*   By: kbam7 <kbam7@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/07/05 16:56:19 by kbam7             #+#    #+#             */
-/*   Updated: 2017/07/05 18:04:42 by kbam7            ###   ########.fr       */
+/*   Updated: 2017/07/10 19:52:54 by kbam7            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "IOperandFactory.hpp"
-
-enum eOperandType
-{
-    AVM_INT_8 = 0,
-    AVM_INT_16,
-    AVM_INT_32,
-    AVM_FLOAT,
-    AVM_DOUBLE
-}
 
 IOperand const * createOperand( eOperandType type, std::string const & value ) const
 {
