@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   avm.hpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kbam7 <kbam7@student.42.fr>                +#+  +:+       +#+        */
+/*   By: kbamping <kbamping@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/07/13 16:54:03 by kbam7             #+#    #+#             */
-/*   Updated: 2017/07/15 22:02:16 by kbam7            ###   ########.fr       */
+/*   Updated: 2017/07/17 14:07:28 by kbamping         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,8 @@ typedef struct  s_instruction
     std::string command;
     std::string operandType;
     std::string value;
+    bool        valid;
+    std::string line;
 }               t_instruction;
 
 #endif /* AVM_HPP */

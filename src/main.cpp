@@ -3,19 +3,21 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kbam7 <kbam7@student.42.fr>                +#+  +:+       +#+        */
+/*   By: kbamping <kbamping@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/07/10 18:40:21 by kbam7             #+#    #+#             */
-/*   Updated: 2017/07/17 09:43:22 by kbam7            ###   ########.fr       */
+/*   Updated: 2017/07/17 13:52:42 by kbamping         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "avm.hpp"
 #include <regex>
 #include <list>
+#include <stack>
 
 t_instruction   lexical_analysis(char *line);
 int             handleFileInput(char *filepath, std::list<t_instruction> & list);
+int             run_instructions(std::list<t_instruction> list);
 
 int     main(int argc, char **argv)
 {
@@ -27,11 +29,13 @@ int     main(int argc, char **argv)
             return (EXIT_FAILURE);
     }
     else {
-        // read from stdin`
-        // tokenize input (lexer)
+        // No input file, read from stdin
+
+            // while read line from stdin
+            // tokenize line (lexical_analysis())
     }
 
-    int n = 1;
+/*     int n = 1;
     for (t_instruction x : lexed_input)
     {
         std::cout << "--------------------" << std::endl;
@@ -41,9 +45,9 @@ int     main(int argc, char **argv)
         std::cout << "DATATYPE: " << x.operandType << std::endl;
         std::cout << "VALUE: " << x.value << std::endl;
 
-        std::cout << "--------------------" << std::endl << std::endl;;
+        std::cout << "--------------------" << std::endl << std::endl;
         ++n;
-    }
+    } */
 
 
         // run instructions (parse)
@@ -57,6 +61,7 @@ int     main(int argc, char **argv)
         //      FLOATING POINT
         // -- CHECK for overflow of FLT_MIN, FLT_MAX, DBL_MIN, DBL_MAX  ----- #include <cfloat>
 
+    run_instructions(lexed_input);
 
     return (0);
 }
@@ -106,10 +111,10 @@ int     handleFileInput(char *filepath, std::list<t_instruction> & list)
 t_instruction   lexical_analysis(char *line)
 {
     std::regex      avm_commands("(push|pop|dump|assert|add|sub|mul|div|mod|print|exit)"); /* (push|assert)( |\t)+(int(8|16|32)|float|double)\([0-9]+((.)*([0-9]+))?\) */
-    std::regex      avm_dataTypes("(int(8|16|32)|float|double)\\(([0-9]+((.)*([0-9]+))?)\\)");
+    std::regex      avm_dataTypes("(int8|int16|int32|float|double)\\(((\\+|-)?[0-9]+((.)*([0-9]+))?)\\)");
     t_instruction   currInstruction;
     char            *token;
-    std::cmatch     cm;
+    std::cmatch     matches;
 
     std::cout << "---" << line << "--- "; // debug
 
@@ -120,33 +125,65 @@ t_instruction   lexical_analysis(char *line)
         std::cout << ">" << token << "< "; // debug
 
         if (std::regex_match (token, avm_commands))
-        {
-                std::cout << "token is a command";
                 currInstruction.command = token;
-        }
         else if (std::regex_match (token, avm_dataTypes))
         {
-            std::cout << "token is a dataType";
-            // get data type and value from token
-            //currInstruction.operandType = strtok(token, "()");
-            //currInstruction.value = strtok(NULL, "()");
-
-            std::regex_match (token, cm, avm_dataTypes);
-            std::cout << "-- The matches were: ";
-            for (unsigned i=0; i<cm.size(); ++i) {
-                std::cout << "[" << cm[i] << "] ";
+            std::regex_match (token, matches, avm_dataTypes);
+             std::cout << "-- The matches were: ";
+            for (unsigned i=0; i < matches.size(); ++i) {
+                std::cout << "[" << matches[i] << "] ";
             }
 
-            std::cout << std::endl;
+            //std::cout << std::endl; 
+ 
+            // get data type and value from token
+            currInstruction.operandType = matches[1];
+            currInstruction.value = matches[2];
 
-            currInstruction.operandType = cm[1];
-            currInstruction.value = cm[3];
-
+        } else {
+            // unrecognised token
         }
-
-        std::cout << std::endl;
-        // 
+        
+        std::cout << std::endl; // debug
         token = strtok(NULL, " \n");
     }
+    std::cout << std::endl; // deubg
     return (currInstruction);
+}
+
+int     run_instructions(std::list<t_instruction> list)
+{
+    int             n = 1;
+    t_instruction   x;
+    //std::stack<IOperand *>  avm_stack;
+    
+    while (!list.empty())
+    {
+        x = list.front();
+        std::cout << "--------------------" << std::endl;
+        std::cout << "Item " << n << std::endl;
+
+        std::cout << "COMMAND: " << x.command << std::endl;
+        std::cout << "DATATYPE: " << x.operandType << std::endl;
+        std::cout << "VALUE: " << x.value << std::endl;
+
+        std::cout << "--------------------" << std::endl << std::endl;
+
+/* push|pop|dump|assert|add|sub|mul|div|mod|print|exit */
+        /* if (strcmp(x.command.c_str(), "push") == 0)
+        else if (strcmp(x.command.c_str(), "pop") == 0)
+        else if (strcmp(x.command.c_str(), "dump") == 0)
+        else if (strcmp(x.command.c_str(), "assert") == 0)
+        else if (strcmp(x.command.c_str(), "add") == 0)
+        else if (strcmp(x.command.c_str(), "sub") == 0)
+        else if (strcmp(x.command.c_str(), "mul") == 0)
+        else if (strcmp(x.command.c_str(), "div") == 0)
+        else if (strcmp(x.command.c_str(), "mod") == 0)
+        else if (strcmp(x.command.c_str(), "print") == 0)
+        else if (strcmp(x.command.c_str(), "exit") == 0) */
+        
+        list.pop_front();
+        ++n;
+    }
+    return (EXIT_SUCCESS);
 }
