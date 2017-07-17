@@ -6,7 +6,7 @@
 /*   By: kbam7 <kbam7@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/07/10 18:40:21 by kbam7             #+#    #+#             */
-/*   Updated: 2017/07/16 19:48:10 by kbam7            ###   ########.fr       */
+/*   Updated: 2017/07/17 09:43:22 by kbam7            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,13 +23,28 @@ int     main(int argc, char **argv)
 
     if (argc > 1) {
         // handle file input
-        if (!handleFileInput(argv[1], lexed_input))
+        if (handleFileInput(argv[1], lexed_input) ==  EXIT_FAILURE)
             return (EXIT_FAILURE);
     }
     else {
-        // read from stdin
+        // read from stdin`
         // tokenize input (lexer)
     }
+
+    int n = 1;
+    for (t_instruction x : lexed_input)
+    {
+        std::cout << "--------------------" << std::endl;
+        std::cout << "Item " << n << std::endl;
+
+        std::cout << "COMMAND: " << x.command << std::endl;
+        std::cout << "DATATYPE: " << x.operandType << std::endl;
+        std::cout << "VALUE: " << x.value << std::endl;
+
+        std::cout << "--------------------" << std::endl << std::endl;;
+        ++n;
+    }
+
 
         // run instructions (parse)
         
@@ -113,15 +128,19 @@ t_instruction   lexical_analysis(char *line)
         {
             std::cout << "token is a dataType";
             // get data type and value from token
-            currInstruction.operandType = token;
+            //currInstruction.operandType = strtok(token, "()");
+            //currInstruction.value = strtok(NULL, "()");
 
             std::regex_match (token, cm, avm_dataTypes);
-            std::cout << "the matches were: ";
+            std::cout << "-- The matches were: ";
             for (unsigned i=0; i<cm.size(); ++i) {
                 std::cout << "[" << cm[i] << "] ";
             }
 
             std::cout << std::endl;
+
+            currInstruction.operandType = cm[1];
+            currInstruction.value = cm[3];
 
         }
 
