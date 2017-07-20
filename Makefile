@@ -3,17 +3,17 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: kbamping <kbamping@student.42.fr>          +#+  +:+       +#+         #
+#    By: kbam7 <kbam7@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2017/07/17 12:35:16 by kbamping          #+#    #+#              #
-#    Updated: 2017/07/17 12:39:44 by kbamping         ###   ########.fr        #
+#    Updated: 2017/07/19 20:48:11 by kbam7            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 #-- PROGRAM --#
 PROG		= avm
 SRC			= ./src
-SRCS		= $(SRC)/main.cpp
+SRCS		= $(SRC)/main.cpp $(SRC)/avm.cpp
 OBJS		= $(SRCS:%.cpp=%.o)
 
 #-- Compiler, libs, flags
@@ -51,7 +51,7 @@ run:
 	@rm -f $(PROG)
 	@echo "\033[01;36m$(PROG) \t\t-- \033[00;32mREMOVED EXECUTABLE\033[0m\n"
 	@$(MAKE) -s all
-	./$(PROG) text.txt
+	./$(PROG) example.avm
 
 run_valgrind:
-	valgrind --track-origins=yes --leak-check=full --show-reachable=yes ./$(PROG) text.txt
+	valgrind --track-origins=yes --leak-check=full --show-reachable=yes ./$(PROG) example.avm

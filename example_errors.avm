@@ -1,0 +1,43 @@
+; -------------
+; example_errors.avm -
+; -------------
+
+push int32(42)
+push int32(33)
+
+add
+
+push                float(44.55)
+
+mul
+
+push double(42.42)
+push int32(42)
+
+dump
+
+pop
+
+assert double(42.42)
+
+assert
+
+push !lkjdvkdjvsmn,dfvn ,/./,v  int32(42)
+
+push int32(52) ;!lkjdvkdjvsmn,dfvn ,/./,v
+
+push int32(62) ; !lkjdvkdjvsmn,dfvn ,/./,v
+
+push  ; !lkjdvkdjvsmn,dfvn ,/./,v int32(72)
+
+push float(42..45678)
+
+push float(-45.764567876)
+
+push double(+100029.4567898765)
+
+slush some(3452)
+
+
+
+exit

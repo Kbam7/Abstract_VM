@@ -6,12 +6,22 @@
 /*   By: kbam7 <kbam7@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/07/05 16:59:09 by kbam7             #+#    #+#             */
-/*   Updated: 2017/07/10 20:06:25 by kbam7            ###   ########.fr       */
+/*   Updated: 2017/07/18 11:11:57 by kbam7            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef IOPERAND_HPP
 # define IOPERAND_HPP
+
+typedef enum    e_OperandType
+{
+    AVM_NONE = 0,
+    AVM_INT8,
+    AVM_INT16,
+    AVM_INT32,
+    AVM_FLOAT,
+    AVM_DOUBLE
+}              eOperandType;
 
 class IOperand
 {
@@ -29,14 +39,5 @@ class IOperand
 
         virtual ~IOperand (void ) {}      
 };
-
-typedef enum    e_OperandType
-{
-    AVM_INT_8 = 0,
-    AVM_INT_16,
-    AVM_INT_32,
-    AVM_FLOAT,
-    AVM_DOUBLE
-}              eOperandType;
 
 #endif /* IOPERAND_HPP */
