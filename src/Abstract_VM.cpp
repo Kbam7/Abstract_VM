@@ -15,6 +15,12 @@
 Abstract_VM::Abstract_VM()
 {
     this->inputController = new InputController(this->instruction_list);
+
+    operandCreationFuncs[0] = &Abstract_VM::createInt8;
+    operandCreationFuncs[1] = &Abstract_VM::createInt16;
+    operandCreationFuncs[2] = &Abstract_VM::createInt32;
+    operandCreationFuncs[3] = &Abstract_VM::createFloat;
+    operandCreationFuncs[4] = &Abstract_VM::createDouble;
 }
 
 Abstract_VM::~Abstract_VM(void)
@@ -65,4 +71,39 @@ int             Abstract_VM::run_instructions(void)
         ++n;
     }
     return (EXIT_SUCCESS);
+}
+
+IOperand const * Abstract_VM::createOperand( eOperandType type, std::string const & value ) const
+{
+    return ((this->*operandCreationFuncs[type])(value));
+}
+
+IOperand const * Abstract_VM::createInt8( std::string const & value ) const
+{
+    std::cout << "createInt8( " << value << " )" << std::endl;
+    return ( new Operand_Int8(value) );
+}
+
+IOperand const * Abstract_VM::createInt16( std::string const & value ) const
+{
+    std::cout << "createInt16( " << value << " )" << std::endl;
+    return ( new Operand_Int16(value) );
+}
+
+IOperand const * Abstract_VM::createInt32( std::string const & value ) const
+{
+    std::cout << "createInt32( " << value << " )" << std::endl;
+    return ( new Operand_Int32(value) );
+}
+
+IOperand const * Abstract_VM::createFloat( std::string const & value ) const
+{
+    std::cout << "createFloat( " << value << " )" << std::endl;
+    return ( new Operand_Float(value) );
+}
+
+IOperand const * Abstract_VM::createDouble( std::string const & value ) const
+{
+    std::cout << "createDouble( " << value << " )" << std::endl;
+    return ( new Operand_Double(value) );
 }

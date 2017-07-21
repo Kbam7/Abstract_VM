@@ -13,7 +13,7 @@
 #-- PROGRAM --#
 PROG		= avm
 SRC			= ./src
-SRCS		= $(SRC)/IOperandFactory.cpp $(SRC)/InputController.cpp $(SRC)/Abstract_VM.cpp $(SRC)/main.cpp
+SRCS		= $(SRC)/InputController.cpp $(SRC)/Abstract_VM.cpp $(SRC)/main.cpp
 OBJS		= $(SRCS:%.cpp=%.o)
 
 #-- Compiler, libs, flags
