@@ -6,12 +6,14 @@
 /*   By: kbam7 <kbam7@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/07/05 16:59:09 by kbam7             #+#    #+#             */
-/*   Updated: 2017/07/18 11:11:57 by kbam7            ###   ########.fr       */
+/*   Updated: 2017/07/20 15:23:50 by kbam7            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef IOPERAND_HPP
 # define IOPERAND_HPP
+
+# include <string>
 
 typedef enum    e_OperandType
 {

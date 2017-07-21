@@ -6,38 +6,15 @@
 /*   By: kbam7 <kbam7@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/07/19 22:53:27 by kbam7             #+#    #+#             */
-/*   Updated: 2017/07/19 23:48:35 by kbam7            ###   ########.fr       */
+/*   Updated: 2017/07/20 15:20:52 by kbam7            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "InputController.hpp"
 
-InputController::InputController(char *filepath)
+InputController::InputController(std::list<t_instruction> & instruction_list)
 {
-    char    buf[maxStrSize];
-
-    // open file
-    if (!(this->inputFile = fopen(filepath, "r"))) {
-        std::cout << C_BOLD << C_RED << "ERROR: " << C_NONE << C_BOLD << "Unable to open file! 'filepath'\n" << C_NONE
-                << "Would you like to get input from the keyboard instead? [y/n]" << std::endl;
-        std::cin >> buf;
-        while (*buf)
-        {
-            if (*buf == 'y' || *buf == 'Y' || *buf == '\n')
-            {
-                std::cout << "Read from keyboard" << std::endl; // debug
-                this->inputFile = stdin;
-                return (EXIT_SUCCESS);
-            } else if (*buf == 'n' || *buf == 'N') {
-                std::cout << "Dont Read from keyboard" << std::endl; // debug
-                return (EXIT_FAILURE);
-            }
-            else
-                std::cin >> buf;
-        }
-        return (EXIT_FAILURE);
-    }
-    return (EXIT_SUCCESS);
+    this->instruction_list = instruction_list;
 }
 
 InputController::~InputController(void)
@@ -57,7 +34,7 @@ InputController & InputController::operator=(InputController const & rhs)
     return (*this);
 }
 
-/*int             InputController::getInputFileDescriptor(char *filepath)
+int             InputController::getInputFileDescriptor(char *filepath)
 {
     char    buf[maxStrSize];
 
@@ -83,7 +60,7 @@ InputController & InputController::operator=(InputController const & rhs)
         return (EXIT_FAILURE);
     }
     return (EXIT_SUCCESS);
-}*/
+}
 
 int             InputController::readFromStdin(void)
 {

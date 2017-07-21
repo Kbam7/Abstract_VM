@@ -6,15 +6,15 @@
 /*   By: kbam7 <kbam7@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/07/19 15:59:16 by kbam7             #+#    #+#             */
-/*   Updated: 2017/07/19 23:48:55 by kbam7            ###   ########.fr       */
+/*   Updated: 2017/07/20 15:17:50 by kbam7            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Abstract_VM.hpp"
 
-Abstract_VM::Abstract_VM(char *filepath)
+Abstract_VM::Abstract_VM()
 {
-    this->inputController = new InputController(filepath);
+    this->inputController = new InputController(this->instruction_list);
 }
 
 Abstract_VM::~Abstract_VM(void)
