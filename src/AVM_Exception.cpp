@@ -6,13 +6,13 @@
 /*   By: kbamping <kbamping@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/07/22 12:07:24 by kbamping          #+#    #+#             */
-/*   Updated: 2017/07/22 15:13:37 by kbamping         ###   ########.fr       */
+/*   Updated: 2017/07/22 15:42:11 by kbamping         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "AVM_Exception.hpp"
 
-AVM_Exception::AVM_Exception(char *error) throw() :  _errorMsg(error) {
+AVM_Exception::AVM_Exception(const char *error) throw() :  _errorMsg(error) {
 
 }
 

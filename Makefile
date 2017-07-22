@@ -6,14 +6,14 @@
 #    By: kbamping <kbamping@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2017/07/17 12:35:16 by kbamping          #+#    #+#              #
-#    Updated: 2017/07/22 15:12:23 by kbamping         ###   ########.fr        #
+#    Updated: 2017/07/22 15:36:02 by kbamping         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 #-- PROGRAM --#
 PROG		= avm
 SRC			= ./src
-SRCS		= $(SRC)/AVM_Exception $(SRC)/InputHandler.cpp $(SRC)/Abstract_VM.cpp $(SRC)/main.cpp
+SRCS		= $(SRC)/AVM_Exception.cpp $(SRC)/InputHandler.cpp $(SRC)/Abstract_VM.cpp $(SRC)/main.cpp
 OBJS		= $(SRCS:%.cpp=%.o)
 
 #-- Compiler, libs, flags

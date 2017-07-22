@@ -6,7 +6,7 @@
 /*   By: kbamping <kbamping@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/07/13 16:54:03 by kbam7             #+#    #+#             */
-/*   Updated: 2017/07/22 12:38:37 by kbamping         ###   ########.fr       */
+/*   Updated: 2017/07/22 17:48:33 by kbamping         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@
 # include <stack>
 # include <exception>
 
-# include "IOperand.hpp"
+# include "Operand.hpp"
 # include "InputHandler.hpp"
 
 class Abstract_VM
@@ -35,13 +35,27 @@ class Abstract_VM
         Abstract_VM(Abstract_VM const & src);
         Abstract_VM & operator=(Abstract_VM const & rhs);
 
-        InputHandler             *InputHandler;
+        InputHandler                *InputHandler;
         std::list<t_instruction>    instruction_list;
-        std::stack<IOperand *>      avm_stack;
+        std::list<const IOperand *> avm_stack;
         t_operandFactory            operandCreationFuncs[5];
 
         int                 run_instructions(void);
+        /*(push|pop|dump|assert|add|sub|mul|div|mod|print|exit)*/
+        void                push(IOperand const *val);
+        void                pop(void);
+        void                dump(void);
+        void                assert(IOperand const *val);
+        void                add(void);
+        void                sub(void);
+        void                mul(void);
+        void                div(void);
+        void                mod(void);
+        void                print(void);
+
         IOperand const *    createOperand( eOperandType type, std::string const & value ) const;
+    
+    private:
         IOperand const *    createInt8( std::string const & value ) const;
         IOperand const *    createInt16( std::string const & value ) const;
         IOperand const *    createInt32( std::string const & value ) const;

@@ -6,7 +6,7 @@
 /*   By: kbamping <kbamping@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/07/10 19:39:33 by kbam7             #+#    #+#             */
-/*   Updated: 2017/07/22 15:03:35 by kbamping         ###   ########.fr       */
+/*   Updated: 2017/07/22 17:56:21 by kbamping         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,6 +86,7 @@ class Operand : public IOperand
             }
             this->_type = type;
             this->_value = value;
+            this->_string = std::to_string(this->_value);
         };
 
         ~Operand()
@@ -123,7 +124,7 @@ class Operand : public IOperand
         
         virtual std::string const & toString( void ) const
         {
-            return (std::to_string(this->_value));
+            return (this->_string);
         };
 
         virtual IOperand const * operator+( IOperand const & rhs ) const
@@ -178,6 +179,8 @@ class Operand : public IOperand
 
         virtual IOperand const * operator/( IOperand const & rhs ) const
         {
+            if (this->_value == 0 || stod(rhs.toString()) == 0)
+                throw AVM_Exception("Div failed - Cannot divide with zero");
             switch ((this->_precision >= rhs.getPrecision()) ? this->_type : rhs.getType())
             {
                 case AVM_INT8:
@@ -195,18 +198,20 @@ class Operand : public IOperand
 
         virtual IOperand const * operator%( IOperand const & rhs ) const
         {
+            if (this->_value == 0 || stod(rhs.toString()) == 0)
+                throw AVM_Exception("Mod failed - Cannot modulus with zero");
             switch ((this->_precision >= rhs.getPrecision()) ? this->_type : rhs.getType())
             {
                 case AVM_INT8:
-                    return (new Operand<char>(this->_type, this->_value * stod(rhs.toString())));
+                    return (new Operand<char>(this->_type, (int)this->_value % stoi(rhs.toString())));
                 case AVM_INT16:
-                    return (new Operand<short>(this->_type, this->_value * stod(rhs.toString())));
+                    return (new Operand<short>(this->_type, (int)this->_value % stoi(rhs.toString())));
                 case AVM_INT32:
-                    return (new Operand<int>(this->_type, this->_value * stod(rhs.toString())));
+                    return (new Operand<int>(this->_type, (int)this->_value % stoi(rhs.toString())));
                 case AVM_FLOAT:
-                    return (new Operand<float>(this->_type, this->_value * stod(rhs.toString())));
+                    return (new Operand<float>(this->_type, (int)this->_value % stoi(rhs.toString())));
                 case AVM_DOUBLE:
-                    return (new Operand<double>(this->_type, this->_value * stod(rhs.toString())));
+                    return (new Operand<double>(this->_type, (int)this->_value % stoi(rhs.toString())));
             }
         }
 
@@ -214,6 +219,7 @@ class Operand : public IOperand
         T               _value;
         eOperandType    _type;
         int             _precision;
+        std::string     _string;
 };
 
 #endif

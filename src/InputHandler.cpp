@@ -6,15 +6,15 @@
 /*   By: kbamping <kbamping@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/07/19 22:53:27 by kbam7             #+#    #+#             */
-/*   Updated: 2017/07/22 12:40:10 by kbamping         ###   ########.fr       */
+/*   Updated: 2017/07/22 16:26:57 by kbamping         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "InputHandler.hpp"
 
-InputHandler::InputHandler(std::list<t_instruction> & instruction_list)
+InputHandler::InputHandler(std::list<t_instruction> & list) : inputFile(stdin), instruction_list(list)
 {
-    this->instruction_list = instruction_list;
+
 }
 
 InputHandler::~InputHandler(void)
@@ -22,9 +22,10 @@ InputHandler::~InputHandler(void)
 
 }
 
-InputHandler::InputHandler(InputHandler const & src)
+InputHandler::InputHandler(InputHandler const & src) : instruction_list(src.instruction_list)
 {
-    *this = src;
+    if (this != &src)
+        *this = src;
 }
 
 InputHandler & InputHandler::operator=(InputHandler const & rhs)
@@ -40,18 +41,16 @@ int             InputHandler::getInputFileDescriptor(char *filepath)
 
     // open file
     if (!(this->inputFile = fopen(filepath, "r"))) {
-        std::cout << C_BOLD << C_RED << "ERROR: " << C_NONE << C_BOLD << "Unable to open file! 'filepath'\n" << C_NONE
+        std::cout << C_BOLD << C_RED << "ERROR: " << C_NONE << C_BOLD << "Unable to open file! '" << filepath << "'\n" << C_NONE
                 << "Would you like to get input from the keyboard instead? [y/n]" << std::endl;
         std::cin >> buf;
         while (*buf)
         {
             if (*buf == 'y' || *buf == 'Y' || *buf == '\n')
             {
-                std::cout << "Read from keyboard" << std::endl; // debug
                 this->inputFile = stdin;
                 return (EXIT_SUCCESS);
             } else if (*buf == 'n' || *buf == 'N') {
-                std::cout << "Dont Read from keyboard" << std::endl; // debug
                 return (EXIT_FAILURE);
             }
             else
@@ -62,18 +61,21 @@ int             InputHandler::getInputFileDescriptor(char *filepath)
     return (EXIT_SUCCESS);
 }
 
-int             InputHandler::readFromStdin(void)
+int             InputHandler::readInputFile(void)
 {
     int                 n_line;
-    std::list<char *>   tmp_list;
     char                *buf;
+    std::list<char *>   tmp_list;
     std::regex           matchEndInput("( |\\t)*(;;)+( |\\t|\\n)*");
     
 
+    if (this->inputFile == stdin)
+        std::cout << "Reading from keyboard(stdin)" << std::endl;
+
     buf = new char [this->maxStrSize];
-    while (fgets(buf, maxStrSize, stdin))
+    while (fgets(buf, maxStrSize, this->inputFile))
     {
-        if (std::regex_match (buf, matchEndInput))
+        if (std::regex_match (buf, matchEndInput) && this->inputFile == stdin)
             break;
         // Add new instruction
         tmp_list.push_back(buf);
@@ -101,9 +103,9 @@ int             InputHandler::readFromStdin(void)
     return (EXIT_SUCCESS);
 }
 
-int             InputHandler::readFromFile(void)
+/* int             InputHandler::readFromFile(void)
 {
-    char    buf[this->maxStrSize];
+    char    buf[this->maxStrSize];ß
     int     n_line;
 
     // Read from file and return (std::string str)list of instructions
@@ -120,7 +122,7 @@ int             InputHandler::readFromFile(void)
     }
     fclose(this->inputFile);
     return (EXIT_SUCCESS);
-}
+} */
 
 char            *InputHandler::tokenize_line(char *line)
 {
@@ -209,7 +211,7 @@ eOperandType    InputHandler::get_operandType(std::string str)
         return (AVM_FLOAT);
     if (strcmp(str.c_str(), "double") == 0)
         return (AVM_DOUBLE);
-    return (AVM_NONE);
+    return (AVM_DOUBLE);
 }
 
 t_instruction   InputHandler::parser(char *line, int n_line)
@@ -224,7 +226,7 @@ t_instruction   InputHandler::parser(char *line, int n_line)
     currInstruction.line = line;
     currInstruction.line_nr = n_line;
     currInstruction.command = CMD_NONE;
-    currInstruction.operandType = AVM_NONE;
+    currInstruction.operandType = AVM_INT8;
     currInstruction.value = "";
 
     // tokenize line

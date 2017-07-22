@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   IOperand.hpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kbam7 <kbam7@student.42.fr>                +#+  +:+       +#+        */
+/*   By: kbamping <kbamping@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/07/05 16:59:09 by kbam7             #+#    #+#             */
-/*   Updated: 2017/07/21 18:46:29 by kbam7            ###   ########.fr       */
+/*   Updated: 2017/07/22 15:47:59 by kbamping         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,8 +21,7 @@ typedef enum    e_OperandType
     AVM_INT16,
     AVM_INT32,
     AVM_FLOAT,
-    AVM_DOUBLE,
-    AVM_NONE
+    AVM_DOUBLE
 }              eOperandType;
 
 class IOperand

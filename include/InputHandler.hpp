@@ -6,7 +6,7 @@
 /*   By: kbamping <kbamping@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/07/19 22:21:33 by kbam7             #+#    #+#             */
-/*   Updated: 2017/07/22 12:38:04 by kbamping         ###   ########.fr       */
+/*   Updated: 2017/07/22 16:21:18 by kbamping         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,18 +67,18 @@ typedef struct  s_instruction
 class InputHandler
 {
     public:
-        InputHandler(std::list<t_instruction> & instruction_list);
+        InputHandler(std::list<t_instruction> & list);
         ~InputHandler(void);
         InputHandler(InputHandler const & src);
         InputHandler & operator=(InputHandler const & rhs);
 
         const size_t                maxStrSize = 1024;
         FILE                        *inputFile;
-        std::list<t_instruction>    instruction_list;
+        std::list<t_instruction> &  instruction_list;
 
         int             getInputFileDescriptor(char *filepath);
-        int             readFromStdin(void);
-        int             readFromFile(void);
+        int             readInputFile(void);
+        /* int             readFromFile(void); */
         char            *tokenize_line(char *line);
         t_command       get_command(char *cmd);
         eOperandType    get_operandType(std::string str);
