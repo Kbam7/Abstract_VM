@@ -6,7 +6,7 @@
 /*   By: kbam7 <kbam7@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/07/19 15:59:16 by kbam7             #+#    #+#             */
-/*   Updated: 2017/07/20 15:17:50 by kbam7            ###   ########.fr       */
+/*   Updated: 2017/07/22 07:38:35 by kbam7            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,29 +81,29 @@ IOperand const * Abstract_VM::createOperand( eOperandType type, std::string cons
 IOperand const * Abstract_VM::createInt8( std::string const & value ) const
 {
     std::cout << "createInt8( " << value << " )" << std::endl;
-    return ( new Operand_Int8(value) );
+    return ( new Operand(AVM_INT8, value) );
 }
 
 IOperand const * Abstract_VM::createInt16( std::string const & value ) const
 {
     std::cout << "createInt16( " << value << " )" << std::endl;
-    return ( new Operand_Int16(value) );
+    return ( new Operand(AVM_INT16, value) );
 }
 
 IOperand const * Abstract_VM::createInt32( std::string const & value ) const
 {
     std::cout << "createInt32( " << value << " )" << std::endl;
-    return ( new Operand_Int32(value) );
+    return ( new Operand(AVM_INT32, value) );
 }
 
 IOperand const * Abstract_VM::createFloat( std::string const & value ) const
 {
     std::cout << "createFloat( " << value << " )" << std::endl;
-    return ( new Operand_Float(value) );
+    return ( new Operand(AVM_FLOAT, value) );
 }
 
 IOperand const * Abstract_VM::createDouble( std::string const & value ) const
 {
     std::cout << "createDouble( " << value << " )" << std::endl;
-    return ( new Operand_Double(value) );
+    return ( new Operand(AVM_DOUBLE, value) );
 }
