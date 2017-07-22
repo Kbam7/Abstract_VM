@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kbam7 <kbam7@student.42.fr>                +#+  +:+       +#+        */
+/*   By: kbamping <kbamping@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/07/10 18:40:21 by kbam7             #+#    #+#             */
-/*   Updated: 2017/07/20 15:02:07 by kbam7            ###   ########.fr       */
+/*   Updated: 2017/07/22 15:11:42 by kbamping         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,12 +15,12 @@
 int     main(int argc, char **argv)
 {
     Abstract_VM     *avm;
-    InputController *ic;
+    InputHandler *ic;
     char        *path;
 
     path = NULL;
     avm = new Abstract_VM();
-    ic = avm->inputController;
+    ic = avm->InputHandler;
     
     if (argc > 1)
     {
@@ -29,10 +29,7 @@ int     main(int argc, char **argv)
         ic->readFromFile();
     }
     else
-    {
-        ic->inputFile = stdin;
         ic->readFromStdin();
-    }
 
     avm->run_instructions();
 

@@ -3,17 +3,17 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: kbam7 <kbam7@student.42.fr>                +#+  +:+       +#+         #
+#    By: kbamping <kbamping@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2017/07/17 12:35:16 by kbamping          #+#    #+#              #
-#    Updated: 2017/07/20 15:23:14 by kbam7            ###   ########.fr        #
+#    Updated: 2017/07/22 15:12:23 by kbamping         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 #-- PROGRAM --#
 PROG		= avm
 SRC			= ./src
-SRCS		= $(SRC)/InputController.cpp $(SRC)/Abstract_VM.cpp $(SRC)/main.cpp
+SRCS		= $(SRC)/AVM_Exception $(SRC)/InputHandler.cpp $(SRC)/Abstract_VM.cpp $(SRC)/main.cpp
 OBJS		= $(SRCS:%.cpp=%.o)
 
 #-- Compiler, libs, flags

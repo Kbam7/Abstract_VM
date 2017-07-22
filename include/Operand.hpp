@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Operand.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kbam7 <kbam7@student.42.fr>                +#+  +:+       +#+        */
+/*   By: kbamping <kbamping@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/07/10 19:39:33 by kbam7             #+#    #+#             */
-/*   Updated: 2017/07/22 08:49:31 by kbam7            ###   ########.fr       */
+/*   Updated: 2017/07/22 15:03:35 by kbamping         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,38 +14,92 @@
 # define OPERAND_INT8_HPP
 
 # include "IOperand.hpp"
+# include "AVM_Exception.hpp"
+# include <climits>
+# include <cfloat>
 
 template <typename T>
 class Operand : public IOperand
 {
     public:
-        Operand::Operand(eOperandType type, std::string value)
+        Operand(eOperandType type, double value)
         {
             switch (type)
             {
                 case AVM_INT8:
-
+                    if (value > SCHAR_MIN)
+                        if (value < SCHAR_MAX)
+                        {
+                            this->_precision = 0;
+                            break;
+                        }
+                        else
+                            throw AVM_Exception::AVM_Exception("Int8 Underflow");
+                    else
+                        throw AVM_Exception::AVM_Exception("Int8 Overflow");
                 case AVM_INT16:
+                    if (value > SHRT_MIN)
+                        if (value < SHRT_MAX)
+                        {
+                            this->_precision = 1;
+                            break;
+                        }
+                        else
+                            throw AVM_Exception::AVM_Exception("Int16 Underflow");
+                    else
+                        throw AVM_Exception::AVM_Exception("Int16 Overflow");
                 case AVM_INT32:
+                    if (value > LONG_MIN)
+                        if (value < LONG_MAX)
+                        {
+                            this->_precision = 2;
+                            break;
+                        }
+                        else
+                            throw AVM_Exception::AVM_Exception("Int32 Underflow");
+                    else
+                        throw AVM_Exception::AVM_Exception("Int32 Overflow");
                 case AVM_FLOAT:
+                    if (value > FLT_MIN)
+                        if (value < FLT_MAX)
+                        {
+                            this->_precision = 3;
+                            break;
+                        }
+                        else
+                            throw AVM_Exception::AVM_Exception("Float Underflow");
+                    else
+                        throw AVM_Exception::AVM_Exception("Float Overflow");
                 case AVM_DOUBLE:
+                    if (value > DBL_MIN)
+                        if (value < DBL_MAX)
+                        {
+                            this->_precision = 4;
+                            break;
+                        }
+                        else
+                            throw AVM_Exception::AVM_Exception("Double Underflow");
+                    else
+                        throw AVM_Exception::AVM_Exception("Double Overflow");
                 default:
                     break;
             }
-        }
+            this->_type = type;
+            this->_value = value;
+        };
 
-        Operand::~Operand()
+        ~Operand()
         {
 
-        }
+        };
 
-        Operand::Operand(const Operand & src)
+        Operand(const Operand & src)
         {
             if (this != &src)
                 *this = src;
-        }
+        };
 
-        Operand & Operand::operator=(const Operand & rhs)
+        Operand & operator=(const Operand & rhs)
         {
             if (this != &rhs)
             {
@@ -55,29 +109,109 @@ class Operand : public IOperand
                 this->_precision = rhs._precision;
             }
             return (*this);
-        }
+        };
 
-        virtual int             Operand::getPrecision(void) const
+        virtual int             getPrecision(void) const
         {
             return (this->_precision);
-        }
+        };
 
-        virtual eOperandType    Operand::getType(void) const
+        virtual eOperandType    getType(void) const
         {
             return (this->_type);
-        }
+        };
         
-        virtual std::string const & Operand::toString( void ) const;
+        virtual std::string const & toString( void ) const
+        {
+            return (std::to_string(this->_value));
+        };
 
-        virtual IOperand const * Operand::operator+( IOperand const & rhs ) const;
-        virtual IOperand const * Operand::operator-( IOperand const & rhs ) const;
-        virtual IOperand const * Operand::operator*( IOperand const & rhs ) const;
-        virtual IOperand const * Operand::operator/( IOperand const & rhs ) const;
-        virtual IOperand const * Operand::operator%( IOperand const & rhs ) const;
+        virtual IOperand const * operator+( IOperand const & rhs ) const
+        {
+            switch ((this->_precision >= rhs.getPrecision()) ? this->_type : rhs.getType())
+            {
+                case AVM_INT8:
+                    return (new Operand<char>(this->_type, this->_value + stod(rhs.toString())));
+                case AVM_INT16:
+                    return (new Operand<short>(this->_type, this->_value + stod(rhs.toString())));
+                case AVM_INT32:
+                    return (new Operand<int>(this->_type, this->_value + stod(rhs.toString())));
+                case AVM_FLOAT:
+                    return (new Operand<float>(this->_type, this->_value + stod(rhs.toString())));
+                case AVM_DOUBLE:
+                    return (new Operand<double>(this->_type, this->_value + stod(rhs.toString())));
+            }
+        };
+
+        virtual IOperand const * operator-( IOperand const & rhs ) const
+        {
+            switch ((this->_precision >= rhs.getPrecision()) ? this->_type : rhs.getType())
+            {
+                case AVM_INT8:
+                    return (new Operand<char>(this->_type, this->_value - stod(rhs.toString())));
+                case AVM_INT16:
+                    return (new Operand<short>(this->_type, this->_value - stod(rhs.toString())));
+                case AVM_INT32:
+                    return (new Operand<int>(this->_type, this->_value - stod(rhs.toString())));
+                case AVM_FLOAT:
+                    return (new Operand<float>(this->_type, this->_value - stod(rhs.toString())));
+                case AVM_DOUBLE:
+                    return (new Operand<double>(this->_type, this->_value - stod(rhs.toString())));
+            }
+        };
+        virtual IOperand const * operator*( IOperand const & rhs ) const
+        {
+            switch ((this->_precision >= rhs.getPrecision()) ? this->_type : rhs.getType())
+            {
+                case AVM_INT8:
+                    return (new Operand<char>(this->_type, this->_value * stod(rhs.toString())));
+                case AVM_INT16:
+                    return (new Operand<short>(this->_type, this->_value * stod(rhs.toString())));
+                case AVM_INT32:
+                    return (new Operand<int>(this->_type, this->_value * stod(rhs.toString())));
+                case AVM_FLOAT:
+                    return (new Operand<float>(this->_type, this->_value * stod(rhs.toString())));
+                case AVM_DOUBLE:
+                    return (new Operand<double>(this->_type, this->_value * stod(rhs.toString())));
+            }
+        }
+
+        virtual IOperand const * operator/( IOperand const & rhs ) const
+        {
+            switch ((this->_precision >= rhs.getPrecision()) ? this->_type : rhs.getType())
+            {
+                case AVM_INT8:
+                    return (new Operand<char>(this->_type, this->_value / stod(rhs.toString())));
+                case AVM_INT16:
+                    return (new Operand<short>(this->_type, this->_value / stod(rhs.toString())));
+                case AVM_INT32:
+                    return (new Operand<int>(this->_type, this->_value / stod(rhs.toString())));
+                case AVM_FLOAT:
+                    return (new Operand<float>(this->_type, this->_value / stod(rhs.toString())));
+                case AVM_DOUBLE:
+                    return (new Operand<double>(this->_type, this->_value / stod(rhs.toString())));
+            }
+        }
+
+        virtual IOperand const * operator%( IOperand const & rhs ) const
+        {
+            switch ((this->_precision >= rhs.getPrecision()) ? this->_type : rhs.getType())
+            {
+                case AVM_INT8:
+                    return (new Operand<char>(this->_type, this->_value * stod(rhs.toString())));
+                case AVM_INT16:
+                    return (new Operand<short>(this->_type, this->_value * stod(rhs.toString())));
+                case AVM_INT32:
+                    return (new Operand<int>(this->_type, this->_value * stod(rhs.toString())));
+                case AVM_FLOAT:
+                    return (new Operand<float>(this->_type, this->_value * stod(rhs.toString())));
+                case AVM_DOUBLE:
+                    return (new Operand<double>(this->_type, this->_value * stod(rhs.toString())));
+            }
+        }
 
     private:
         T               _value;
-        std::string     _string;
         eOperandType    _type;
         int             _precision;
 };

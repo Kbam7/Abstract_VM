@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Abstract_VM.hpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kbam7 <kbam7@student.42.fr>                +#+  +:+       +#+        */
+/*   By: kbamping <kbamping@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/07/13 16:54:03 by kbam7             #+#    #+#             */
-/*   Updated: 2017/07/20 15:14:17 by kbam7            ###   ########.fr       */
+/*   Updated: 2017/07/22 12:38:37 by kbamping         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@
 # include <exception>
 
 # include "IOperand.hpp"
-# include "InputController.hpp"
+# include "InputHandler.hpp"
 
 class Abstract_VM
 {
@@ -35,7 +35,7 @@ class Abstract_VM
         Abstract_VM(Abstract_VM const & src);
         Abstract_VM & operator=(Abstract_VM const & rhs);
 
-        InputController             *inputController;
+        InputHandler             *InputHandler;
         std::list<t_instruction>    instruction_list;
         std::stack<IOperand *>      avm_stack;
         t_operandFactory            operandCreationFuncs[5];

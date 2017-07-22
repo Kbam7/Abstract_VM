@@ -1,40 +1,40 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   InputController.cpp                                :+:      :+:    :+:   */
+/*   InputHandler.cpp                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kbam7 <kbam7@student.42.fr>                +#+  +:+       +#+        */
+/*   By: kbamping <kbamping@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/07/19 22:53:27 by kbam7             #+#    #+#             */
-/*   Updated: 2017/07/20 15:20:52 by kbam7            ###   ########.fr       */
+/*   Updated: 2017/07/22 12:40:10 by kbamping         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "InputController.hpp"
+#include "InputHandler.hpp"
 
-InputController::InputController(std::list<t_instruction> & instruction_list)
+InputHandler::InputHandler(std::list<t_instruction> & instruction_list)
 {
     this->instruction_list = instruction_list;
 }
 
-InputController::~InputController(void)
+InputHandler::~InputHandler(void)
 {
 
 }
 
-InputController::InputController(InputController const & src)
+InputHandler::InputHandler(InputHandler const & src)
 {
     *this = src;
 }
 
-InputController & InputController::operator=(InputController const & rhs)
+InputHandler & InputHandler::operator=(InputHandler const & rhs)
 {
     this->inputFile = rhs.inputFile;
 
     return (*this);
 }
 
-int             InputController::getInputFileDescriptor(char *filepath)
+int             InputHandler::getInputFileDescriptor(char *filepath)
 {
     char    buf[maxStrSize];
 
@@ -62,15 +62,16 @@ int             InputController::getInputFileDescriptor(char *filepath)
     return (EXIT_SUCCESS);
 }
 
-int             InputController::readFromStdin(void)
+int             InputHandler::readFromStdin(void)
 {
     int                 n_line;
     std::list<char *>   tmp_list;
     char                *buf;
     std::regex           matchEndInput("( |\\t)*(;;)+( |\\t|\\n)*");
     
+
     buf = new char [this->maxStrSize];
-    while (fgets(buf, maxStrSize, this->inputFile))
+    while (fgets(buf, maxStrSize, stdin))
     {
         if (std::regex_match (buf, matchEndInput))
             break;
@@ -100,7 +101,7 @@ int             InputController::readFromStdin(void)
     return (EXIT_SUCCESS);
 }
 
-int             InputController::readFromFile(void)
+int             InputHandler::readFromFile(void)
 {
     char    buf[this->maxStrSize];
     int     n_line;
@@ -121,7 +122,7 @@ int             InputController::readFromFile(void)
     return (EXIT_SUCCESS);
 }
 
-char            *InputController::tokenize_line(char *line)
+char            *InputHandler::tokenize_line(char *line)
 {
     static int  i = 0;
     static char *_line = NULL;
@@ -169,7 +170,7 @@ char            *InputController::tokenize_line(char *line)
     return (token);
 }
 
-t_command       InputController::get_command(char *cmd)
+t_command       InputHandler::get_command(char *cmd)
 {
     if (strcmp(cmd, "push") == 0)
         return (CMD_PUSH);
@@ -196,7 +197,7 @@ t_command       InputController::get_command(char *cmd)
     return (CMD_NONE);
 }
 
-eOperandType    InputController::get_operandType(std::string str)
+eOperandType    InputHandler::get_operandType(std::string str)
 {
     if (strcmp(str.c_str(), "int8") == 0)
         return (AVM_INT8);
@@ -211,7 +212,7 @@ eOperandType    InputController::get_operandType(std::string str)
     return (AVM_NONE);
 }
 
-t_instruction   InputController::parser(char *line, int n_line)
+t_instruction   InputHandler::parser(char *line, int n_line)
 {
     t_instruction   currInstruction;
     char            *token;
@@ -254,7 +255,7 @@ t_instruction   InputController::parser(char *line, int n_line)
     return (currInstruction);
 }
 
-void        InputController::parse_token(char *token, t_instruction *currInstruction)
+void        InputHandler::parse_token(char *token, t_instruction *currInstruction)
 {
     std::regex      avm_commands("(push|pop|dump|assert|add|sub|mul|div|mod|print|exit)");
     std::regex      avm_dataTypes("(int8|int16|int32|float|double)\\(((\\+|-)?[0-9]+((.)*([0-9]+))?)\\)");
@@ -292,16 +293,16 @@ void        InputController::parse_token(char *token, t_instruction *currInstruc
     else {
         // unrecognised token
         currInstruction->valid = false;
-        throw (InputController::UnrecognisedToken());
+        throw (InputHandler::UnrecognisedToken());
     }
 }
 
-const char* InputController::UnrecognisedToken::what() const throw()
+const char* InputHandler::UnrecognisedToken::what() const throw()
 {
     return ("Found an unrecognised token :");
 }
 
-const char* InputController::InputFileError::what() const throw()
+const char* InputHandler::InputFileError::what() const throw()
 {
     return ("An error occurred with the input file :");
 }

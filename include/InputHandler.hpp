@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   InputController.hpp                                :+:      :+:    :+:   */
+/*   InputHandler.hpp                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kbam7 <kbam7@student.42.fr>                +#+  +:+       +#+        */
+/*   By: kbamping <kbamping@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/07/19 22:21:33 by kbam7             #+#    #+#             */
-/*   Updated: 2017/07/20 15:21:45 by kbam7            ###   ########.fr       */
+/*   Updated: 2017/07/22 12:38:04 by kbamping         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,13 +64,13 @@ typedef struct  s_instruction
     std::string     value;
 }               t_instruction;
 
-class InputController
+class InputHandler
 {
     public:
-        InputController(std::list<t_instruction> & instruction_list);
-        ~InputController(void);
-        InputController(InputController const & src);
-        InputController & operator=(InputController const & rhs);
+        InputHandler(std::list<t_instruction> & instruction_list);
+        ~InputHandler(void);
+        InputHandler(InputHandler const & src);
+        InputHandler & operator=(InputHandler const & rhs);
 
         const size_t                maxStrSize = 1024;
         FILE                        *inputFile;

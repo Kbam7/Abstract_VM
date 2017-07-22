@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Abstract_VM.cpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kbam7 <kbam7@student.42.fr>                +#+  +:+       +#+        */
+/*   By: kbamping <kbamping@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/07/19 15:59:16 by kbam7             #+#    #+#             */
-/*   Updated: 2017/07/22 07:38:35 by kbam7            ###   ########.fr       */
+/*   Updated: 2017/07/22 12:38:35 by kbamping         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 Abstract_VM::Abstract_VM()
 {
-    this->inputController = new InputController(this->instruction_list);
+    this->InputHandler = new InputHandler(this->instruction_list);
 
     operandCreationFuncs[0] = &Abstract_VM::createInt8;
     operandCreationFuncs[1] = &Abstract_VM::createInt16;
@@ -25,8 +25,8 @@ Abstract_VM::Abstract_VM()
 
 Abstract_VM::~Abstract_VM(void)
 {
-    if (this->inputController)
-        delete this->inputController;
+    if (this->InputHandler)
+        delete this->InputHandler;
 }
 
 Abstract_VM::Abstract_VM(Abstract_VM const & src)
