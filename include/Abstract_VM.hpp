@@ -6,7 +6,7 @@
 /*   By: kbamping <kbamping@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/07/13 16:54:03 by kbam7             #+#    #+#             */
-/*   Updated: 2017/07/22 17:48:33 by kbamping         ###   ########.fr       */
+/*   Updated: 2017/07/23 13:50:38 by kbamping         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,8 @@ class Abstract_VM
         IOperand const *    createOperand( eOperandType type, std::string const & value ) const;
     
     private:
+        bool    _debug;
+
         IOperand const *    createInt8( std::string const & value ) const;
         IOperand const *    createInt16( std::string const & value ) const;
         IOperand const *    createInt32( std::string const & value ) const;

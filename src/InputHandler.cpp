@@ -6,7 +6,7 @@
 /*   By: kbamping <kbamping@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/07/19 22:53:27 by kbam7             #+#    #+#             */
-/*   Updated: 2017/07/23 13:20:38 by kbamping         ###   ########.fr       */
+/*   Updated: 2017/07/23 14:24:30 by kbamping         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,27 +103,6 @@ int             InputHandler::readInputFile(void)
     return (EXIT_SUCCESS);
 }
 
-/* int             InputHandler::readFromFile(void)
-{
-    char    buf[this->maxStrSize];ß
-    int     n_line;
-
-    // Read from file and return (std::string str)list of instructions
-    n_line = 0;
-    while (fgets(buf, maxStrSize, this->inputFile))
-    {
-        n_line++;
-        // Comment or empty line
-        if (*buf == ';' || *buf == '\n')
-            continue;
-            
-        // Add new instruction
-        this->instruction_list.push_back( parser(buf, n_line) );
-    }
-    fclose(this->inputFile);
-    return (EXIT_SUCCESS);
-} */
-
 char            *InputHandler::tokenize_line(char *line)
 {
     static int  i = 0;
@@ -131,14 +110,10 @@ char            *InputHandler::tokenize_line(char *line)
     int         token_len;
     char        *token;
 
-/*    if (line == NULL) // debug
-        std::cout << "--[tokenize_input]-- line: NULL  Using current '_line'  _line: \"" << _line << "\"  i: " << i <<  std::endl; // debug*/
-
     if (line != NULL)
     {
         _line = line;
         i = 0;
-/*        std::cout << "--[tokenize_input]-- line: \"" << line << "\"  i: " << i << std::endl; // debug*/
     }
     token_len = 0;
     token = NULL;
@@ -239,6 +214,7 @@ t_instruction   InputHandler::parser(char *line, int n_line)
         }
         catch (std::exception & e)
         {
+            currInstruction.valid = false;
             std::cerr << C_BOLD << C_RED << "ERROR: " << C_NONE << C_BOLD << "Line: " << n_line << " --> "
                 << e.what() << C_NONE << " '" << token << "'" << std::endl;
         }
@@ -263,36 +239,20 @@ void        InputHandler::parse_token(char *token, t_instruction *currInstructio
     std::cmatch     matches;
 
     if (std::regex_match (token, avm_commands))
-    {
-/*        std::cout << "Its a command\n"; // debug*/
         currInstruction->command = get_command(token);
-    }
     else if (std::regex_match (token, avm_dataTypes))
     {
-/*         std::cout << "Its a dataType\n";  // debug */
-
         if (std::regex_match(token, avm_value))
             std::regex_match (token, matches, avm_dataTypes);
         else
-        {
-            currInstruction->valid = false;
             throw (InputHandler::NoValueFound());
-        }
-
-/*        std::cout << "-- The matches were: ";  // debug
-        for (unsigned i=0; i < matches.size(); ++i) { // debug
-            std::cout << "[" << matches[i] << "] "; // debug
-        }*/
 
         // get data type and value from token
         currInstruction->operandType = this->get_operandType(matches[1]);
         currInstruction->value = matches[2];
     }
-    else {
-        // unrecognised token
-        currInstruction->valid = false;
+    else
         throw (InputHandler::UnrecognisedToken());
-    }
 }
 
 const char* InputHandler::UnrecognisedToken::what() const throw()

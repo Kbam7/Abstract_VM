@@ -6,14 +6,14 @@
 /*   By: kbamping <kbamping@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/07/19 15:59:16 by kbam7             #+#    #+#             */
-/*   Updated: 2017/07/23 10:53:25 by kbamping         ###   ########.fr       */
+/*   Updated: 2017/07/23 16:00:20 by kbamping         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Abstract_VM.hpp"
 #include <cstdlib>
 
-Abstract_VM::Abstract_VM()
+Abstract_VM::Abstract_VM() : _debug(false)
 {
     this->InputHandler = new InputHandler::InputHandler(this->instruction_list);
 
@@ -45,76 +45,91 @@ Abstract_VM & Abstract_VM::operator=(Abstract_VM const & rhs)
 int             Abstract_VM::run_instructions(void)
 {
     int             n = 1;
+    int             list_valid = 1, found_exit = 0;
     t_instruction   x;
 
-    for (t_instruction y : this->instruction_list)
+
+    for ( t_instruction  y : this->instruction_list)
     {
+        if (this->_debug) { 
+            std::cout << "--------------------" << std::endl;
+            std::cout << "Item " << n << std::endl;
+            std::cout << "VALID: " << ((y.valid) ? "true" : "false") << std::endl;
+            std::cout << "LINE: " << y.line << std::endl;
+            std::cout << "LINE_NR: " << y.line_nr << std::endl;
+            std::cout << "COMMAND: " << y.command << std::endl;
+            std::cout << "OPERAND TYPE: " << y.operandType << std::endl;
+            std::cout << "VALUE: " << y.value << std::endl;
+            std::cout << "--------------------" << std::endl << std::endl;
+            ++n;
+        }
         if (!y.valid)
-            return (EXIT_FAILURE);
+            list_valid = 0;
+    }
+    
+    try
+    {
+        if (not list_valid)
+            throw AVM_Exception("List of instructions is invalid");
+    }
+    catch (std::exception & e)
+    {
+        std::cerr << C_BOLD << C_RED << "ERROR: " << C_NONE << C_BOLD << " --> "
+            << e.what() << C_NONE << std::endl;
+        return (EXIT_FAILURE);
     }
 
+    n = 1;
     while (!this->instruction_list.empty())
     {
         x = this->instruction_list.front();
-/*         std::cout << "--------------------" << std::endl;
-        std::cout << "Item " << n << std::endl;
-
-        std::cout << "VALID: " << ((x.valid) ? "true" : "false") << std::endl;
-        std::cout << "LINE: " << x.line << std::endl;
-        std::cout << "LINE_NR: " << x.line_nr << std::endl;
-        std::cout << "COMMAND: " << x.command << std::endl;
-        std::cout << "OPERAND TYPE: " << x.operandType << std::endl;
-        std::cout << "VALUE: " << x.value << std::endl;
-
-        std::cout << "--------------------" << std::endl << std::endl; */
-
         try
         {
             switch (x.command)
             {
                     case CMD_PUSH:
-                        std::cout << "PUSHING" << std::endl; // debug
+                        if (this->_debug) { std::cout << "PUSHING" << std::endl; } // debug 
                         this->push(createOperand(x.operandType, x.value));
                         break;
                     case CMD_POP:
-                        std::cout << "POPPING" << std::endl; // debug
+                        if (this->_debug) { std::cout << "POPPING" << std::endl; } // debug
                         this->pop();
                         break;
                     case CMD_DUMP:
-                        std::cout << "DUMPING" << std::endl; // debug
+                        if (this->_debug) { std::cout << "DUMPING" << std::endl; } // debug
                         this->dump();
                         break;
                     case CMD_ASSERT:
-                        std::cout << "ASSERTING" << std::endl; // debug
+                        if (this->_debug) { std::cout << "ASSERTING" << std::endl; } // debug
                         this->assert(createOperand(x.operandType, x.value));
                         break;
                     case CMD_ADD:
-                        std::cout << "ADDING" << std::endl; // debug
+                        if (this->_debug) { std::cout << "ADDING" << std::endl; } // debug
                         this->add();
                         break;
                     case CMD_SUB:
-                        std::cout << "SUBTRACTING" << std::endl; // debug
+                        if (this->_debug) { std::cout << "SUBTRACTING" << std::endl; } // debug
                         this->sub();
                         break;
                     case CMD_MUL:
-                        std::cout << "MULTIPLYING" << std::endl; // debug
+                        if (this->_debug) { std::cout << "MULTIPLYING" << std::endl; } // debug
                         this->mul();
                         break;
                     case CMD_DIV:
-                        std::cout << "DIVIDING" << std::endl; // debug
+                        if (this->_debug) { std::cout << "DIVIDING" << std::endl; } // debug
                         this->div();
                         break;
                     case CMD_MOD:
-                        std::cout << "MODULUSING" << std::endl; // debug
+                        if (this->_debug) { std::cout << "MODULUSING" << std::endl; } // debug
                         this->mod();
                         break;
                     case CMD_PRINT:
-                        std::cout << "PRINTING" << std::endl; // debug
+                        if (this->_debug) { std::cout << "PRINTING" << std::endl; } // debug
                         this->print();
                         break;
                     case CMD_EXIT:
-                        std::cout << "EXITING" << std::endl; // debug
-                        break;
+                        if (this->_debug) { std::cout << "EXITING" << std::endl; } // debug
+                        return (EXIT_SUCCESS);
                     case CMD_NONE:
                     default:
                         break;
@@ -125,10 +140,22 @@ int             Abstract_VM::run_instructions(void)
                 << e.what() << C_NONE << std::endl;
             return (EXIT_FAILURE);
         }
-        
+            
         this->instruction_list.pop_front();
         ++n;
-        std::cout << std::endl << std::endl; // debug
+        if (this->_debug) { std::cout << std::endl << std::endl; } // debug
+    }
+
+    try
+    {
+        if (not found_exit)
+            throw AVM_Exception("No exit command found");
+    }
+    catch (std::exception & e)
+    {
+        std::cerr << C_BOLD << C_RED << "ERROR: " << C_NONE << C_BOLD << " --> "
+            << e.what() << C_NONE << std::endl;
+        return (EXIT_FAILURE);
     }
     return (EXIT_SUCCESS);
 }
@@ -147,11 +174,26 @@ void                Abstract_VM::pop(void)
 
 void                Abstract_VM::dump(void)
 {
-    if (this->avm_stack.empty())
-        throw AVM_Exception("Dump on empty stack");
-
-    for (std::list<const IOperand *>::iterator it = this->avm_stack.begin(); it != this->avm_stack.end(); ++it)
-        std::cout << (*it)->toString() << std::endl;
+    if (not this->avm_stack.empty())
+    {
+        for (std::list<const IOperand *>::iterator it = this->avm_stack.begin(); it != this->avm_stack.end(); ++it)
+        {
+            switch ((*it)->getType())
+            {
+                case AVM_INT8:
+                case AVM_INT16:
+                case AVM_INT32:
+                    std::cout << stoi((*it)->toString()) << std::endl;
+                    break;
+                case AVM_FLOAT:
+                    std::cout << stof((*it)->toString()) << std::endl;
+                    break;
+                case AVM_DOUBLE:
+                    std::cout << stod((*it)->toString()) << std::endl;
+                    break;
+            }
+        }
+    }
 }
 
 void                Abstract_VM::assert(IOperand const *val)
@@ -182,7 +224,7 @@ void                Abstract_VM::add(void)
     tmp2 = this->avm_stack.front();
     this->avm_stack.pop_front();
 
-    this->avm_stack.push_front(*tmp1 + *tmp2);
+    this->avm_stack.push_front(*tmp2 + *tmp1);
 }
 
 void                Abstract_VM::sub(void)
@@ -199,7 +241,7 @@ void                Abstract_VM::sub(void)
     tmp2 = this->avm_stack.front();
     this->avm_stack.pop_front();
 
-    this->avm_stack.push_front(*tmp1 - *tmp2);
+    this->avm_stack.push_front(*tmp2 - *tmp1);
 }
 
 void                Abstract_VM::mul(void)
@@ -216,7 +258,7 @@ void                Abstract_VM::mul(void)
     tmp2 = this->avm_stack.front();
     this->avm_stack.pop_front();
 
-    this->avm_stack.push_front(*tmp1 * *tmp2);
+    this->avm_stack.push_front(*tmp2 * *tmp1);
 }
 
 void                Abstract_VM::div(void)
@@ -233,7 +275,7 @@ void                Abstract_VM::div(void)
     tmp2 = this->avm_stack.front();
     this->avm_stack.pop_front();
 
-    this->avm_stack.push_front(*tmp1 / *tmp2);
+    this->avm_stack.push_front(*tmp2 / *tmp1);
 }
 
 void                Abstract_VM::mod(void)
@@ -250,17 +292,20 @@ void                Abstract_VM::mod(void)
     tmp2 = this->avm_stack.front();
     this->avm_stack.pop_front();
 
-    this->avm_stack.push_front(*tmp1 % *tmp2);
+    this->avm_stack.push_front(*tmp2 % *tmp1);
 }
 void                Abstract_VM::print(void)
 {
     const IOperand *tmp1;
+    int             val;
 
     if (this->avm_stack.front()->getType() != AVM_INT8)
         throw AVM_Exception("Print failed - Top value not int8 type");
 
     tmp1 = this->avm_stack.front();
-    std::cout << static_cast<char>(stoi(tmp1->toString()));
+    val = stoi(tmp1->toString());
+    if (val > 31 && val < 127)
+        std::cout << static_cast<char>(val);
 }
 
 IOperand const * Abstract_VM::createOperand( eOperandType type, std::string const & value ) const
@@ -270,30 +315,30 @@ IOperand const * Abstract_VM::createOperand( eOperandType type, std::string cons
 
 IOperand const * Abstract_VM::createInt8( std::string const & value ) const
 {
-    std::cout << "createInt8( " << value << " )" << std::endl;
+    if (this->_debug) { std::cout << "createInt8( " << value << " )" << std::endl; } // debug
     return ( new Operand<char>(AVM_INT8, strtod(value.c_str(), NULL)));
 }
 
 IOperand const * Abstract_VM::createInt16( std::string const & value ) const
 {
-    std::cout << "createInt16( " << value << " )" << std::endl;
+    if (this->_debug) { std::cout << "createInt16( " << value << " )" << std::endl; } // debug
     return ( new Operand<short>(AVM_INT16, stod(value)) );
 }
 
 IOperand const * Abstract_VM::createInt32( std::string const & value ) const
 {
-    std::cout << "createInt32( " << value << " )" << std::endl;
+    if (this->_debug) { std::cout << "createInt32( " << value << " )" << std::endl; } // debug
     return ( new Operand<int>(AVM_INT32, stod(value)) );
 }
 
 IOperand const * Abstract_VM::createFloat( std::string const & value ) const
 {
-    std::cout << "createFloat( " << value << " )" << std::endl;
+    if (this->_debug) { std::cout << "createFloat( " << value << " )" << std::endl; } // debug
     return ( new Operand<float>(AVM_FLOAT, stod(value)) );
 }
 
 IOperand const * Abstract_VM::createDouble( std::string const & value ) const
 {
-    std::cout << "createDouble( " << value << " )" << std::endl;
+    if (this->_debug) { std::cout << "createDouble( " << value << " )" << std::endl; } // debug
     return ( new Operand<double>(AVM_DOUBLE, stod(value)) );
 }

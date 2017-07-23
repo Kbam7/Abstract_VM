@@ -1,0 +1,23 @@
+; -------------
+; example2.avm -
+; -------------
+
+; Test -- int8
+push int8(127)
+push int8(-127)
+push int8(0)
+
+dump
+pop
+assert int8(-127)
+dump
+
+add
+dump
+
+push int8(127)
+add
+
+dump
+
+exit

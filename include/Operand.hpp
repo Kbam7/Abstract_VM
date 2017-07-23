@@ -6,13 +6,14 @@
 /*   By: kbamping <kbamping@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/07/10 19:39:33 by kbam7             #+#    #+#             */
-/*   Updated: 2017/07/23 13:17:13 by kbamping         ###   ########.fr       */
+/*   Updated: 2017/07/23 15:47:28 by kbamping         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef OPERAND_INT8_HPP
 # define OPERAND_INT8_HPP
 
+#include <iostream>
 # include "IOperand.hpp"
 # include "AVM_Exception.hpp"
 # include <climits>
@@ -129,93 +130,110 @@ class Operand : public IOperand
 
         virtual IOperand const * operator+( IOperand const & rhs ) const
         {
-            switch ((this->_precision >= rhs.getPrecision()) ? this->_type : rhs.getType())
+            eOperandType prec;
+
+            prec = (this->_precision >= rhs.getPrecision()) ? this->_type : rhs.getType();
+            switch (prec)
             {
                 case AVM_INT8:
-                    return (new Operand<char>(this->_type, this->_value + stod(rhs.toString())));
+                    return (new Operand<char>(prec, this->_value + stod(rhs.toString())));
                 case AVM_INT16:
-                    return (new Operand<short>(this->_type, this->_value + stod(rhs.toString())));
+                    return (new Operand<short>(prec, this->_value + stod(rhs.toString())));
                 case AVM_INT32:
-                    return (new Operand<int>(this->_type, this->_value + stod(rhs.toString())));
+                    return (new Operand<int>(prec, this->_value + stod(rhs.toString())));
                 case AVM_FLOAT:
-                    return (new Operand<float>(this->_type, this->_value + stod(rhs.toString())));
+                    return (new Operand<float>(prec, this->_value + stod(rhs.toString())));
                 case AVM_DOUBLE:
-                    return (new Operand<double>(this->_type, this->_value + stod(rhs.toString())));
+                    return (new Operand<double>(prec, this->_value + stod(rhs.toString())));
             }
         };
 
         virtual IOperand const * operator-( IOperand const & rhs ) const
         {
-            switch ((this->_precision >= rhs.getPrecision()) ? this->_type : rhs.getType())
+            eOperandType prec;
+
+            prec = (this->_precision >= rhs.getPrecision()) ? this->_type : rhs.getType();
+            switch (prec)
             {
                 case AVM_INT8:
-                    return (new Operand<char>(this->_type, this->_value - stod(rhs.toString())));
+                    return (new Operand<char>(prec, this->_value - stod(rhs.toString())));
                 case AVM_INT16:
-                    return (new Operand<short>(this->_type, this->_value - stod(rhs.toString())));
+                    return (new Operand<short>(prec, this->_value - stod(rhs.toString())));
                 case AVM_INT32:
-                    return (new Operand<int>(this->_type, this->_value - stod(rhs.toString())));
+                    return (new Operand<int>(prec, this->_value - stod(rhs.toString())));
                 case AVM_FLOAT:
-                    return (new Operand<float>(this->_type, this->_value - stod(rhs.toString())));
+                    return (new Operand<float>(prec, this->_value - stod(rhs.toString())));
                 case AVM_DOUBLE:
-                    return (new Operand<double>(this->_type, this->_value - stod(rhs.toString())));
+                    return (new Operand<double>(prec, this->_value - stod(rhs.toString())));
             }
         };
         virtual IOperand const * operator*( IOperand const & rhs ) const
         {
-            switch ((this->_precision >= rhs.getPrecision()) ? this->_type : rhs.getType())
+            eOperandType prec;
+
+            prec = (this->_precision >= rhs.getPrecision()) ? this->_type : rhs.getType();
+            switch (prec)
             {
                 case AVM_INT8:
-                    return (new Operand<char>(this->_type, this->_value * stod(rhs.toString())));
+                    return (new Operand<char>(prec, this->_value * stod(rhs.toString())));
                 case AVM_INT16:
-                    return (new Operand<short>(this->_type, this->_value * stod(rhs.toString())));
+                    return (new Operand<short>(prec, this->_value * stod(rhs.toString())));
                 case AVM_INT32:
-                    return (new Operand<int>(this->_type, this->_value * stod(rhs.toString())));
+                    return (new Operand<int>(prec, this->_value * stod(rhs.toString())));
                 case AVM_FLOAT:
-                    return (new Operand<float>(this->_type, this->_value * stod(rhs.toString())));
+                    return (new Operand<float>(prec, this->_value * stod(rhs.toString())));
                 case AVM_DOUBLE:
-                    return (new Operand<double>(this->_type, this->_value * stod(rhs.toString())));
+                    return (new Operand<double>(prec, this->_value * stod(rhs.toString())));
             }
         }
 
         virtual IOperand const * operator/( IOperand const & rhs ) const
         {
+            eOperandType prec;
+            
             if (this->_value == 0 || stod(rhs.toString()) == 0)
                 throw AVM_Exception("Div failed - Cannot divide with zero");
-            switch ((this->_precision >= rhs.getPrecision()) ? this->_type : rhs.getType())
+
+            prec = (this->_precision >= rhs.getPrecision()) ? this->_type : rhs.getType();
+            switch (prec)
             {
                 case AVM_INT8:
-                    return (new Operand<char>(this->_type, this->_value / stod(rhs.toString())));
+                    return (new Operand<char>(prec, this->_value / stod(rhs.toString())));
                 case AVM_INT16:
-                    return (new Operand<short>(this->_type, this->_value / stod(rhs.toString())));
+                    return (new Operand<short>(prec, this->_value / stod(rhs.toString())));
                 case AVM_INT32:
-                    return (new Operand<int>(this->_type, this->_value / stod(rhs.toString())));
+                    return (new Operand<int>(prec, this->_value / stod(rhs.toString())));
                 case AVM_FLOAT:
-                    return (new Operand<float>(this->_type, this->_value / stod(rhs.toString())));
+                    return (new Operand<float>(prec, this->_value / stod(rhs.toString())));
                 case AVM_DOUBLE:
-                    return (new Operand<double>(this->_type, this->_value / stod(rhs.toString())));
+                    return (new Operand<double>(prec, this->_value / stod(rhs.toString())));
             }
         }
 
         virtual IOperand const * operator%( IOperand const & rhs ) const
         {
+            eOperandType prec;
+            
             if (this->_value == 0 || stod(rhs.toString()) == 0)
                 throw AVM_Exception("Mod failed - Cannot modulus with zero");
             if (this->_type == AVM_FLOAT || rhs.getType() == AVM_FLOAT)
                 throw AVM_Exception("Mod failed - Cannot modulus with float");
             if (this->_type == AVM_DOUBLE || rhs.getType() == AVM_DOUBLE)
                 throw AVM_Exception("Mod failed - Cannot modulus with double");
-            switch ((this->_precision >= rhs.getPrecision()) ? this->_type : rhs.getType())
+
+            prec = (this->_precision >= rhs.getPrecision()) ? this->_type : rhs.getType();
+            switch (prec)
             {
                 case AVM_INT8:
-                    return (new Operand<char>(this->_type, (int)this->_value % stoi(rhs.toString())));
+                    return (new Operand<char>(prec, (int)this->_value % stoi(rhs.toString())));
                 case AVM_INT16:
-                    return (new Operand<short>(this->_type, (int)this->_value % stoi(rhs.toString())));
+                    return (new Operand<short>(prec, (int)this->_value % stoi(rhs.toString())));
                 case AVM_INT32:
-                    return (new Operand<int>(this->_type, (int)this->_value % stoi(rhs.toString())));
+                    return (new Operand<int>(prec, (int)this->_value % stoi(rhs.toString())));
                 case AVM_FLOAT:
-                    return (new Operand<float>(this->_type, (int)this->_value % stoi(rhs.toString())));
+                    return (new Operand<float>(prec, (int)this->_value % stoi(rhs.toString())));
                 case AVM_DOUBLE:
-                    return (new Operand<double>(this->_type, (int)this->_value % stoi(rhs.toString())));
+                    return (new Operand<double>(prec, (int)this->_value % stoi(rhs.toString())));
             }
         }
 

@@ -1,5 +1,5 @@
 ; -------------
-; example_errors2.avm -
+; example2_errors.avm -
 ; -------------
 
 push int8(127)
