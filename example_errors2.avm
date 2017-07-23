@@ -1,0 +1,24 @@
+; -------------
+; example_errors2.avm -
+; -------------
+
+push int8(127)
+push int8(-127)
+
+dump
+
+push int8(126)
+push int8(-128)
+
+dump
+
+pop
+dump
+pop
+dump
+pop
+dump
+pop
+pop
+
+exit

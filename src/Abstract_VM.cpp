@@ -6,7 +6,7 @@
 /*   By: kbamping <kbamping@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/07/19 15:59:16 by kbam7             #+#    #+#             */
-/*   Updated: 2017/07/22 18:31:02 by kbamping         ###   ########.fr       */
+/*   Updated: 2017/07/23 10:53:25 by kbamping         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,7 @@ int             Abstract_VM::run_instructions(void)
                         this->pop();
                         break;
                     case CMD_DUMP:
-                        std::cout << "PUSHING" << std::endl; // debug
+                        std::cout << "DUMPING" << std::endl; // debug
                         this->dump();
                         break;
                     case CMD_ASSERT:
@@ -93,7 +93,7 @@ int             Abstract_VM::run_instructions(void)
                         this->add();
                         break;
                     case CMD_SUB:
-                        std::cout << "SUBBING" << std::endl; // debug
+                        std::cout << "SUBTRACTING" << std::endl; // debug
                         this->sub();
                         break;
                     case CMD_MUL:
@@ -121,8 +121,9 @@ int             Abstract_VM::run_instructions(void)
             }
         } catch (std::exception & e)
         {
-            std::cerr << C_BOLD << C_RED << "ERROR: " << C_NONE << C_BOLD << "Line: " << x.line_nr << " --> "
-                << e.what() << C_NONE << " '" << x.line << "'" << std::endl;
+            std::cerr << C_BOLD << C_RED << "ERROR: " << C_NONE << C_BOLD << "Line: " << x.line_nr << " '" << x.line << "'" << " --> "
+                << e.what() << C_NONE << std::endl;
+            return (EXIT_FAILURE);
         }
         
         this->instruction_list.pop_front();
@@ -249,7 +250,7 @@ void                Abstract_VM::mod(void)
     tmp2 = this->avm_stack.front();
     this->avm_stack.pop_front();
 
-    this->avm_stack.push_front(*tmp1 + *tmp2);
+    this->avm_stack.push_front(*tmp1 % *tmp2);
 }
 void                Abstract_VM::print(void)
 {
@@ -259,7 +260,7 @@ void                Abstract_VM::print(void)
         throw AVM_Exception("Print failed - Top value not int8 type");
 
     tmp1 = this->avm_stack.front();
-    std::cout << stoi(tmp1->toString());
+    std::cout << static_cast<char>(stoi(tmp1->toString()));
 }
 
 IOperand const * Abstract_VM::createOperand( eOperandType type, std::string const & value ) const

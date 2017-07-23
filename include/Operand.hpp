@@ -6,7 +6,7 @@
 /*   By: kbamping <kbamping@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/07/10 19:39:33 by kbam7             #+#    #+#             */
-/*   Updated: 2017/07/22 17:56:21 by kbamping         ###   ########.fr       */
+/*   Updated: 2017/07/23 13:17:13 by kbamping         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,60 +27,60 @@ class Operand : public IOperand
             switch (type)
             {
                 case AVM_INT8:
-                    if (value > SCHAR_MIN)
-                        if (value < SCHAR_MAX)
+                    if (value >= SCHAR_MIN)
+                        if (value <= SCHAR_MAX)
                         {
                             this->_precision = 0;
                             break;
                         }
                         else
-                            throw AVM_Exception::AVM_Exception("Int8 Underflow");
+                            throw AVM_Exception::AVM_Exception("Int8 Overflow");
                     else
-                        throw AVM_Exception::AVM_Exception("Int8 Overflow");
+                        throw AVM_Exception::AVM_Exception("Int8 Underflow");
                 case AVM_INT16:
-                    if (value > SHRT_MIN)
-                        if (value < SHRT_MAX)
+                    if (value >= SHRT_MIN)
+                        if (value <= SHRT_MAX)
                         {
                             this->_precision = 1;
                             break;
                         }
                         else
-                            throw AVM_Exception::AVM_Exception("Int16 Underflow");
+                            throw AVM_Exception::AVM_Exception("Int16 Overflow");
                     else
-                        throw AVM_Exception::AVM_Exception("Int16 Overflow");
+                        throw AVM_Exception::AVM_Exception("Int16 Underflow");
                 case AVM_INT32:
-                    if (value > LONG_MIN)
-                        if (value < LONG_MAX)
+                    if (value >= INT_MIN)
+                        if (value <= INT_MAX)
                         {
                             this->_precision = 2;
                             break;
                         }
                         else
-                            throw AVM_Exception::AVM_Exception("Int32 Underflow");
+                            throw AVM_Exception::AVM_Exception("Int32 Overflow");
                     else
-                        throw AVM_Exception::AVM_Exception("Int32 Overflow");
+                        throw AVM_Exception::AVM_Exception("Int32 Underflow");
                 case AVM_FLOAT:
-                    if (value > FLT_MIN)
-                        if (value < FLT_MAX)
+                    if (value >= -FLT_MAX)
+                        if (value <= FLT_MAX)
                         {
                             this->_precision = 3;
                             break;
                         }
                         else
-                            throw AVM_Exception::AVM_Exception("Float Underflow");
+                            throw AVM_Exception::AVM_Exception("Float Overflow");
                     else
-                        throw AVM_Exception::AVM_Exception("Float Overflow");
+                        throw AVM_Exception::AVM_Exception("Float Underflow");
                 case AVM_DOUBLE:
-                    if (value > DBL_MIN)
-                        if (value < DBL_MAX)
+                    if (value >= -DBL_MAX)
+                        if (value <= DBL_MAX)
                         {
                             this->_precision = 4;
                             break;
                         }
                         else
-                            throw AVM_Exception::AVM_Exception("Double Underflow");
+                            throw AVM_Exception::AVM_Exception("Double Overflow");
                     else
-                        throw AVM_Exception::AVM_Exception("Double Overflow");
+                        throw AVM_Exception::AVM_Exception("Double Underflow");
                 default:
                     break;
             }
@@ -200,6 +200,10 @@ class Operand : public IOperand
         {
             if (this->_value == 0 || stod(rhs.toString()) == 0)
                 throw AVM_Exception("Mod failed - Cannot modulus with zero");
+            if (this->_type == AVM_FLOAT || rhs.getType() == AVM_FLOAT)
+                throw AVM_Exception("Mod failed - Cannot modulus with float");
+            if (this->_type == AVM_DOUBLE || rhs.getType() == AVM_DOUBLE)
+                throw AVM_Exception("Mod failed - Cannot modulus with double");
             switch ((this->_precision >= rhs.getPrecision()) ? this->_type : rhs.getType())
             {
                 case AVM_INT8:

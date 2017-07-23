@@ -6,7 +6,7 @@
 /*   By: kbamping <kbamping@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/07/19 22:21:33 by kbam7             #+#    #+#             */
-/*   Updated: 2017/07/22 16:21:18 by kbamping         ###   ########.fr       */
+/*   Updated: 2017/07/23 11:02:04 by kbamping         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,6 +86,11 @@ class InputHandler
         void            parse_token(char *token, t_instruction *currInstruction);
 
         class UnrecognisedToken: public std::exception {
+            public:
+                virtual const char* what() const throw();
+        };
+
+        class NoValueFound: public std::exception {
             public:
                 virtual const char* what() const throw();
         };

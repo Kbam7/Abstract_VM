@@ -6,7 +6,7 @@
 /*   By: kbamping <kbamping@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/07/19 22:53:27 by kbam7             #+#    #+#             */
-/*   Updated: 2017/07/22 16:26:57 by kbamping         ###   ########.fr       */
+/*   Updated: 2017/07/23 13:20:38 by kbamping         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -219,7 +219,8 @@ t_instruction   InputHandler::parser(char *line, int n_line)
     t_instruction   currInstruction;
     char            *token;
 
-/*    std::cout << "---" << line << "--- "; // debug*/
+    if (line[strlen(line) - 1] == '\n')
+        line[strlen(line) - 1] = 0;
 
     // Init currInstruction
     currInstruction.valid = true;
@@ -233,8 +234,6 @@ t_instruction   InputHandler::parser(char *line, int n_line)
     token = tokenize_line(line);
     while (token)
     {
-/*        std::cout << ">" << token << "< "; // debug*/
-
         try {
             parse_token(token, &currInstruction);
         }
@@ -247,7 +246,6 @@ t_instruction   InputHandler::parser(char *line, int n_line)
         free(token);
         token = this->tokenize_line(NULL);
     }
-/*    std::cout << "Line parsed.\n" << std::endl; // debug*/
 
     // Check instruction
     if (currInstruction.command == CMD_PUSH || currInstruction.command == CMD_ASSERT)
@@ -260,7 +258,8 @@ t_instruction   InputHandler::parser(char *line, int n_line)
 void        InputHandler::parse_token(char *token, t_instruction *currInstruction)
 {
     std::regex      avm_commands("(push|pop|dump|assert|add|sub|mul|div|mod|print|exit)");
-    std::regex      avm_dataTypes("(int8|int16|int32|float|double)\\(((\\+|-)?[0-9]+((.)*([0-9]+))?)\\)");
+    std::regex      avm_dataTypes("(int8|int16|int32|float|double)\\(((\\+|-)?[0-9]+((.)*([0-9]+))?)?\\)"); /* ((\\+|-)?[0-9]+((.)*([0-9]+))?) */
+    std::regex      avm_value("[a-zA-Z0-9]+\\(((\\+|-)?[0-9]+((.)*([0-9]+))?)\\)");
     std::cmatch     matches;
 
     if (std::regex_match (token, avm_commands))
@@ -270,8 +269,15 @@ void        InputHandler::parse_token(char *token, t_instruction *currInstructio
     }
     else if (std::regex_match (token, avm_dataTypes))
     {
-/*        std::cout << "Its a dataType\n";  // debug*/
-        std::regex_match (token, matches, avm_dataTypes);
+/*         std::cout << "Its a dataType\n";  // debug */
+
+        if (std::regex_match(token, avm_value))
+            std::regex_match (token, matches, avm_dataTypes);
+        else
+        {
+            currInstruction->valid = false;
+            throw (InputHandler::NoValueFound());
+        }
 
 /*        std::cout << "-- The matches were: ";  // debug
         for (unsigned i=0; i < matches.size(); ++i) { // debug
@@ -281,16 +287,6 @@ void        InputHandler::parse_token(char *token, t_instruction *currInstructio
         // get data type and value from token
         currInstruction->operandType = this->get_operandType(matches[1]);
         currInstruction->value = matches[2];
-
-        //      INTS
-        //-- CHECK for overflow of SCHAR_MIN, SCHAR_MAX, SHRT_MIN, SHRT_MAX, LONG_MIN, LONG_MAX ----- #include <climits>
-        // int8 max == 127
-        // int16 max == 32767
-        // int32 max == 2147483647
-
-        //      FLOATING POINT
-        // -- CHECK for overflow of FLT_MIN, FLT_MAX, DBL_MIN, DBL_MAX  ----- #include <cfloat>
-
     }
     else {
         // unrecognised token
@@ -302,6 +298,11 @@ void        InputHandler::parse_token(char *token, t_instruction *currInstructio
 const char* InputHandler::UnrecognisedToken::what() const throw()
 {
     return ("Found an unrecognised token :");
+}
+
+const char* InputHandler::NoValueFound::what() const throw()
+{
+    return ("No value found :");
 }
 
 const char* InputHandler::InputFileError::what() const throw()
