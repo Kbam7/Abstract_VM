@@ -6,7 +6,7 @@
 /*   By: kbamping <kbamping@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/07/19 15:59:16 by kbam7             #+#    #+#             */
-/*   Updated: 2017/07/23 16:00:20 by kbamping         ###   ########.fr       */
+/*   Updated: 2017/07/23 16:39:29 by kbamping         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -176,6 +176,7 @@ void                Abstract_VM::dump(void)
 {
     if (not this->avm_stack.empty())
     {
+        std::cout << "-----" << std::endl;
         for (std::list<const IOperand *>::iterator it = this->avm_stack.begin(); it != this->avm_stack.end(); ++it)
         {
             switch ((*it)->getType())
@@ -193,6 +194,7 @@ void                Abstract_VM::dump(void)
                     break;
             }
         }
+        std::cout << "-----" << std::endl << std::endl;
     }
 }
 
